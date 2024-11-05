@@ -62,7 +62,10 @@ Contributors
 
 -  Thierry Ducrest <thierry.ducrest@camptocamp.com>
 -  `Trobz <https://trobz.com>`__:
--  Nguyen Ho <nguyenhk@trobz.com>
+
+   -  Nguyen Ho <nguyenhk@trobz.com>
+   -  Khoi (Kien Kim) <khoikk@trobz.com>
+
 -  `Binhex <https://binhex.cloud/>`__:
 -  David Luis Mora <d.luis@binhex.cloud>
 
@@ -70,6 +73,9 @@ Other credits
 -------------
 
 The migration of this module from 13.0 to 14.0 was financially supported
+by Camptocamp
+
+The migration of this module from 16.0 to 18.0 was financially supported
 by Camptocamp
 
 Maintainers
