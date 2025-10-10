@@ -20,10 +20,8 @@ class AccountMove(models.Model):
             key=lambda x: (
                 x["picking"]
                 and (
-                    (x["picking"].date or min_date).strftime(DTF),
-                    (x["picking"].date_done or x["picking"].date or min_date).strftime(
-                        DTF
-                    ),
+                    min_date.strftime(DTF),
+                    (x["picking"].date_done or min_date).strftime(DTF),
                 )
                 or ("", ""),
                 x.get("is_last_section_notes", False),
@@ -100,7 +98,9 @@ class AccountMove(models.Model):
             # Reset sections and notes when encountering a regular line
             last_section_notes = []
             has_returned_qty = False
-            remaining_qty = line.quantity
+            remaining_qty = line.product_uom_id._compute_quantity(
+                line.quantity, line.product_id.uom_id
+            )
             # Process moves related to the line
             for move in line.move_line_ids:
                 key = (move.picking_id, line)

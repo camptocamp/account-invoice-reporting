@@ -15,10 +15,7 @@
             <attribute name="t-as">lines_group</attribute>
         </xpath>
         <!-- Appends before 'current_subtotal' compute -->
-        <xpath
-            expr="//t[@t-value='current_subtotal + line.price_subtotal']"
-            position="before"
-        >
+        <xpath expr="//t[@t-set='is_note']" position="before">
             <t t-set="l" t-value="lines_group['line']" />
             <t t-set="line" t-value="lines_group['line']" />
             <t t-set="picking" t-value="lines_group['picking']" />
@@ -61,19 +58,28 @@
             </t>
         </xpath>
         <xpath expr="//td/span[@t-field='line.quantity']" position="attributes">
-            <attribute name="t-esc">lines_group['quantity']</attribute>
+            <attribute
+                name="t-esc"
+            >l.product_id.uom_id._compute_quantity(lines_group['quantity'], l.product_uom_id)</attribute>
             <attribute name="t-field" />
             <attribute
                 name="t-options"
             >{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}</attribute>
         </xpath>
+        <xpath expr="//t[@t-set='product_uom_qty']" position="attributes">
+            <attribute name="t-value">lines_group['quantity']</attribute>
+        </xpath>
         <xpath expr="//td/span[@t-field='line.price_subtotal']" position="before">
             <t t-set="line_subtotal" t-value="l.price_subtotal" />
-            <t t-if="lines_group['quantity'] != l.quantity" id="picking_subtotal">
+            <t
+                t-set="line_quantity"
+                t-value="l.product_uom_id._compute_quantity(l.quantity, l.product_id.uom_id)"
+            />
+            <t t-if="lines_group['quantity'] != line_quantity" id="picking_subtotal">
                 <!-- Compute subtotal for that picking with discounts -->
                 <t
                     t-set="line_picking_subtotal"
-                    t-value="l.quantity and lines_group['quantity'] * (line_subtotal / l.quantity) or 0.0"
+                    t-value="line_quantity and lines_group['quantity'] * (line_subtotal / line_quantity) or 0.0"
                 />
                 <t
                     t-set="subtotal"
@@ -89,7 +95,7 @@
             </t>
         </xpath>
         <xpath expr="//td/span[@t-field='line.price_subtotal']" position="attributes">
-            <attribute name="t-if">lines_group['quantity'] == l.quantity</attribute>
+            <attribute name="t-if">lines_group['quantity'] == line_quantity</attribute>
         </xpath>
         <!-- Append subtotal row after invoice line row-->
         <xpath
